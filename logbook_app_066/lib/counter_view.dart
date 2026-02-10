@@ -14,16 +14,16 @@ class _CounterViewState extends State<CounterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Multi step Counter")),
+      appBar: AppBar(title: const Text("Multi step & Logbook Counter")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("Total Hitungan:"),
-            Text('${_controller.value}', style: const TextStyle(fontSize: 40)),
+            Text('${_controller.value}', style: const TextStyle(fontSize: 50)),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
 
             TextField(
               controller: _stepInput,
@@ -40,43 +40,72 @@ class _CounterViewState extends State<CounterView> {
 
             const SizedBox(height: 20),
 
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     ElevatedButton(
-            //       onPressed: () => setState(() => _controller.decrement()),
-            //       child: const Text("-"),
-            //     ),
-            //     const SizedBox(width: 20),
-            //     ElevatedButton(
-            //       onPressed: () => setState(() => _controller.increment()),
-            //       child: const Text("+"),
-            //     ),
-            //   ],
-            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () =>
+                      setState(() => _controller.decrement()),
+                  child: const Text("-"),
+                ),
+                const SizedBox(width: 30),
+                ElevatedButton(
+                  onPressed: () =>
+                      setState(() => _controller.increment()),
+                  child: const Text("+"),
+                ),
+                const SizedBox(width: 30),
+                ElevatedButton(
+                  onPressed: () =>
+                      setState(() => _controller.reset()),
+                  child: const Text("Reset"),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 50),
+            const Divider(),
+            const Text(
+              "Riwayat Aktivitas",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: _controller.history.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.history),
+                    title: Text(_controller.history[index]),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => setState(() => _controller.increment()),
-      //   child: const Icon(Icons.add),
+  
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   children: [
+      //     FloatingActionButton(
+      //       heroTag: "decrement",
+      //       onPressed: () => setState(() => _controller.decrement()),
+      //       child: const Icon(Icons.remove),
+      //     ),
+      //     FloatingActionButton(
+      //       heroTag: "reset",
+      //       onPressed: () => setState(() => _controller.reset()),
+      //       child: const Icon(Icons.refresh),
+      //     ),
+      //     FloatingActionButton(
+      //       heroTag: "increment",
+      //       onPressed: () => setState(() => _controller.increment()),
+      //       child: const Icon(Icons.add),
+      //     ),
+      //   ],
       // ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          FloatingActionButton(
-            heroTag: "decrement",
-            onPressed: () => setState(() => _controller.decrement()),
-            child: const Icon(Icons.remove),
-          ),
-          FloatingActionButton(
-            heroTag: "increment",
-            onPressed: () => setState(() => _controller.increment()),
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
     );
   }
 }
