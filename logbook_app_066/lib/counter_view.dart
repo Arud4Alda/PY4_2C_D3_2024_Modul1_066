@@ -36,7 +36,7 @@ class _CounterViewState extends State<CounterView> {
               controller: _stepInput,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: "Step",
+                labelText: "Atur step counter",
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
@@ -56,35 +56,35 @@ class _CounterViewState extends State<CounterView> {
                     foregroundColor: Colors.black,
                     minimumSize: const Size(90, 50),
                     textStyle: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   onPressed: () => setState(() => _controller.decrement()),
                   child: const Text("-"),
                 ),
-                const SizedBox(width: 30),
+                const SizedBox(width: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFBFDBFE),
                     foregroundColor: Colors.black,
                     minimumSize: const Size(90, 50),
                     textStyle: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   onPressed: () => setState(() => _controller.increment()),
                   child: const Text("+"),
                 ),
-                const SizedBox(width: 30),
+                const SizedBox(width: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFBFDBFE),
                     foregroundColor: Colors.black,
                     minimumSize: const Size(90, 50),
                     textStyle: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -139,7 +139,7 @@ class _CounterViewState extends State<CounterView> {
                   final item = _controller.history[index];
 
                   Color textColor;
-                  IconData icon;
+                 IconData icon;
 
                   if (item.contains("menambah")) {
                     textColor = const Color.fromARGB(255, 92, 168, 94);
@@ -153,7 +153,7 @@ class _CounterViewState extends State<CounterView> {
                   }
 
                   return ListTile(
-                    leading: const Icon(Icons.history),
+                    leading: const Icon(Icons.adb_sharp),
                     title: Text(item, style: TextStyle(color: textColor)),
                   );
                 },
