@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'counter_controller.dart';
+import 'package:logbook_app_001/features/logbook/counter_controller.dart';
+import 'package:logbook_app_001/features/onboarding/onboarding_view.dart';
 
 class CounterView extends StatefulWidget {
-  const CounterView({super.key});
+  final String username;
+  const CounterView({super.key, required this.username});
   @override
   State<CounterView> createState() => _CounterViewState();
 }
@@ -16,17 +18,57 @@ class _CounterViewState extends State<CounterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Multi step & Logbook Counter",
+        title: Text("Logbook: ${widget.username}",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 83, 119, 177),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Konfirmasi Logout"),
+                    content: const Text("Apakah Anda yakin? Data yang belum disimpan mungkin akan hilang."),
+                    actions: [
+                      // Tombol Batal
+                      TextButton(
+                        onPressed: () => Navigator.pop(context), // Menutup dialog saja
+                        child: const Text("Batal"),
+                      ),
+                      // Tombol Ya, Logout
+                      TextButton(
+                        onPressed: () {
+                          // Menutup dialog
+                          Navigator.pop(context); 
+                          
+                          // 2. Navigasi kembali ke Onboarding (Membersihkan Stack)
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => const OnboardingView()),
+                            (route) => false,
+                          );
+                        },
+                        child: const Text("Ya, Keluar", style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text("Selamat Datang, ${widget.username}!"),
+            const SizedBox(height: 10),
             const Text("Total Hitungan:"),
             Text('${_controller.value}', style: const TextStyle(fontSize: 100)),
 
