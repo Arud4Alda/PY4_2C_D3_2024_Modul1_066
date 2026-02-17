@@ -15,6 +15,16 @@ class _CounterViewState extends State<CounterView> {
   final Color pastelBlue = const Color.fromARGB(255, 101, 150, 210);
 
   @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+  void _loadData() async {
+    await _controller.loadLastValue();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +82,7 @@ class _CounterViewState extends State<CounterView> {
             const Text("Total Hitungan:"),
             Text('${_controller.value}', style: const TextStyle(fontSize: 100)),
 
-            const SizedBox(height: 60),
+            const SizedBox(height: 50),
 
             TextField(
               controller: _stepInput,

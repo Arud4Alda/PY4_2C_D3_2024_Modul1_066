@@ -1,3 +1,6 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 class CounterController {
   int _counter = 0; // Variabel private (Enkapsulasi)
   int _step = 1; //default stepnya
@@ -28,15 +31,28 @@ class CounterController {
   {
     _counter += _step;
     _addHistory("User menambah $_step");
+    saveLastValue();
   } 
   void decrement() 
   {
     if (_counter - _step >= 0) _counter -= _step;
     _addHistory("User mengurangi $_step");
+    saveLastValue();
   }
   void reset() 
   {
     _counter = 0;
     _addHistory("User reset counter");
+    saveLastValue();
   } 
+
+  Future<void> saveLastValue() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('last_counter', _counter);
+  }
+
+  Future<void> loadLastValue() async {
+    final prefs = await SharedPreferences.getInstance();
+    _counter = prefs.getInt('last_counter') ?? 0;
+  }
 }
