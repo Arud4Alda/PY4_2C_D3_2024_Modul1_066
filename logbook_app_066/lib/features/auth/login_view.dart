@@ -23,11 +23,7 @@ class _LoginViewState extends State<LoginView> {
     String pass = _passController.text;
 
     if (user.isEmpty || pass.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Username dan Password tidak boleh kosong"),
-        ),
-      );
+      showSnack("Username dan Password tidak boleh kosong");
       return;
     }
 
@@ -43,10 +39,7 @@ class _LoginViewState extends State<LoginView> {
       );
     } else {
       _loginAttempts++;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login Gagal! ($_loginAttempts/3)")),
-      );
+      showSnack("Login Gagal! ($_loginAttempts/3)");
       if (_loginAttempts >= 3) {
         setState(() {
           _isLocked = true;
@@ -62,41 +55,114 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
+  void showSnack(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color.fromARGB(255, 106, 160, 128),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        margin: const EdgeInsets.all(20),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login Gatekeeper")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _userController,
-              decoration: const InputDecoration(labelText: "Username"),
-            ),
-            TextField(
-              controller: _passController,
-              obscureText: _isHidden, // Menyembunyikan teks password
-              decoration: InputDecoration(
-                labelText: "Password",
-                suffixIcon: IconButton(
-                icon: Icon(
-                  _isHidden ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isHidden = !_isHidden;
-                  });
-                },
+      body: Container(
+        color: const Color(0xFFFFF8E7), 
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  const Icon(Icons.lock_outline,
+                      size: 80, color: Color(0xFF4F7C6D)),
+
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    "Login Akun",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4F7C6D),
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  TextField(
+                    controller: _userController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "Username",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  TextField(
+                    controller: _passController,
+                    obscureText: _isHidden,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "Password",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isHidden = !_isHidden;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 106, 160, 128),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: _isLocked ? null : _handleLogin,
+                      child: Text(
+                        _isLocked ? "Tunggu 10 Detik..." : "Masuk",
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isLocked ? null : _handleLogin,
-              child: Text(_isLocked ? "Tunggu 10 Detik..." : "Masuk"),
-            ),
-          ],
+          ),
         ),
       ),
     );

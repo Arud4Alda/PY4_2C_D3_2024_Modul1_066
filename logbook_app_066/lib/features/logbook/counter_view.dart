@@ -12,7 +12,6 @@ class CounterView extends StatefulWidget {
 class _CounterViewState extends State<CounterView> {
   final CounterController _controller = CounterController();
   final TextEditingController _stepInput = TextEditingController(text: "1");
-  final Color pastelBlue = const Color.fromARGB(255, 101, 150, 210);
 
   @override
   void initState() {
@@ -20,41 +19,52 @@ class _CounterViewState extends State<CounterView> {
     _loadData();
   }
   void _loadData() async {
-    await _controller.loadLastValue();
+    await _controller.loadLastValue(widget.username);
     setState(() {});
+  }
+
+  String getGreeting() 
+  {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 6 && hour < 12) {
+      return "Selamat Pagi";
+    } else if (hour >= 12 && hour < 15) {
+      return "Selamat Siang";
+    } else if (hour >= 15 && hour < 18) {
+      return "Selamat Sore";
+    } else {
+      return "Selamat Malam";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Logbook: ${widget.username}",
+        title: Text("Logbook",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color.fromARGB(255, 83, 119, 177),
+        backgroundColor: const Color.fromARGB(255, 106, 160, 128),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Color.fromARGB(255, 255, 255, 255)),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text("Konfirmasi Logout"),
-                    content: const Text("Apakah Anda yakin? Data yang belum disimpan mungkin akan hilang."),
+                    content: const Text("Apakah Anda yakin akan tetap logout?"),
                     actions: [
-                      // Tombol Batal
                       TextButton(
-                        onPressed: () => Navigator.pop(context), // Menutup dialog saja
+                        onPressed: () => Navigator.pop(context), 
                         child: const Text("Batal"),
                       ),
-                      // Tombol Ya, Logout
                       TextButton(
                         onPressed: () {
-                          // Menutup dialog
                           Navigator.pop(context); 
                           
-                          // 2. Navigasi kembali ke Onboarding (Membersihkan Stack)
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => const OnboardingView()),
@@ -72,12 +82,18 @@ class _CounterViewState extends State<CounterView> {
         ],
 
       ),
+      backgroundColor: const Color(0xFFFFF8E7),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Selamat Datang, ${widget.username}!"),
+            Text("${getGreeting()}, ${widget.username} 🌿",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF4F7C6D),
+              ),),
             const SizedBox(height: 10),
             const Text("Total Hitungan:"),
             Text('${_controller.value}', style: const TextStyle(fontSize: 100)),
@@ -104,36 +120,45 @@ class _CounterViewState extends State<CounterView> {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFBFDBFE),
-                    foregroundColor: Colors.black,
+                    backgroundColor: const Color.fromARGB(255, 106, 160, 128),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     minimumSize: const Size(90, 50),
                     textStyle: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  onPressed: () => setState(() => _controller.decrement()),
+                  onPressed: () => setState(() => _controller.decrement(widget.username)),
                   child: const Text("-"),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFBFDBFE),
-                    foregroundColor: Colors.black,
+                    backgroundColor: const Color.fromARGB(255, 106, 160, 128),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     minimumSize: const Size(90, 50),
                     textStyle: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  onPressed: () => setState(() => _controller.increment()),
+                  onPressed: () => setState(() => _controller.increment(widget.username)),
                   child: const Text("+"),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFBFDBFE),
-                    foregroundColor: Colors.black,
+                    backgroundColor: const Color.fromARGB(255, 106, 160, 128),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     minimumSize: const Size(90, 50),
                     textStyle: const TextStyle(
                       fontSize: 17,
@@ -162,7 +187,7 @@ class _CounterViewState extends State<CounterView> {
                     );
 
                     if (confirm == true) {
-                      setState(() => _controller.reset());
+                      setState(() => _controller.reset(widget.username));
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

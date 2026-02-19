@@ -9,72 +9,99 @@ class OnboardingView extends StatefulWidget {
 
 class _OnboardingViewState extends State<OnboardingView> 
 {
-  int step = 1; // state untuk menyimpan halaman onboarding saat ini
+  int step = 1; 
+  final List<String> images = [
+    "assets/images/1.jpg",
+    "assets/images/2.jpg",
+    "assets/images/3.jpg",
+  ];
+  final List<String> descriptions = [
+    "Pantau Logbook yang tampil menarik dan mudah dipahami",
+    "Mudah digunakan untuk mencatat aktivitas harianmu",
+    "Fokus pada aktivitasmu, biar logbook yang urus pencatatan",
+  ];
 
   void nextStep() 
   {
-    setState(() {step++;});
-    // jika sudah lebih dari 3 → pindah ke Login
-    if (step > 3) 
-    {
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const LoginView()),);
+    if (step < 3) {
+      setState(() => step++);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginView()),
+      );
     }
   }
 
-// Widget buildImage() {
-//     switch (step) {
-//       case 1:
-//         return Image.asset(
-//           'package:logbook_app_001/assets/images/1.jpg',
-//           height: 250,
-//         );
-//       case 2:
-//         return Image.asset(
-//           'package:logbook_app_001/assets/images/2.jpg',
-//           height: 250,
-//         );
-//       case 3:
-//         return Image.asset(
-//           'package:logbook_app_001/assets/images/3.jpg',
-//           height: 250,
-//         );
-//       default:
-//         return const SizedBox();
-//     }
-//   }
+Widget buildIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(3, (index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 5),
+          width: step == index + 1 ? 14 : 10,
+          height: step == index + 1 ? 14 : 10,
+          decoration: BoxDecoration(
+            color: step == index + 1
+                ? const Color.fromARGB(255, 106, 160, 128)
+                : Colors.grey.shade300,
+            shape: BoxShape.circle,
+          ),
+        );
+      }),
+    );
+  }
 
  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
+      backgroundColor: const Color(0xFFFFF8E7),
+      body: Padding(
         padding: const EdgeInsets.all(30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: 
-          [
-              Text("Halaman Onboarding ",
-                style: const TextStyle
-                (
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 30),
-              //buildImage(),
-              Text('$step', style: const TextStyle(fontSize: 110)),
-              const SizedBox(height: 40),
+          children: [
+            ClipRRect(
+               borderRadius: BorderRadius.circular(25),
+               child: Image.asset(
+                      images[step - 1],
+                      height: 320,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+            ),
+            ),
 
-              ElevatedButton
-              (
-                onPressed: nextStep,
-                child: const Text("Lanjut"),
+            const SizedBox(height: 30),
+
+            Text(
+              descriptions[step - 1],
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF4F7C6D),
               ),
+            ),
+
+            const SizedBox(height: 30),
+
+            buildIndicator(),
+
+            const SizedBox(height: 40),
+
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 106, 160, 128),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40, vertical: 15),
+              ),
+              onPressed: nextStep,
+              child: Text(step == 3 ? "Mulai" : "Lanjut"),
+            ),
           ],
         ),
-       ),
-      )
+      ),
     );
   }
 }
